@@ -1,65 +1,47 @@
 package application.service;
 
 import application.domain.Guest;
-import application.repository.GuestRepository;
+import application.repository.GuestRepository; // Ojo aquí, mejor usa la Interfaz (Port)
 import application.service.outputs.GuestService;
+import application.service.ports.GuestRepositoryPort;
 
 import java.util.Optional;
-import java.util.Scanner;
 
 public class GuestServiceImpl implements GuestService {
 
-    Scanner sc = new Scanner(System.in);
+    // 1. Inyectamos la Interfaz (Puerto), no la implementación directa
+    private final GuestRepositoryPort guestRepository;
 
-    private final GuestRepository guestRepository;
-
-    public GuestServiceImpl(GuestRepository guestRepository){
-
-        this.guestRepository= guestRepository;
-
+    public GuestServiceImpl(GuestRepositoryPort guestRepository){
+        this.guestRepository = guestRepository;
     }
-
-
-
 
     @Override
     public Guest createGuest(Guest guest) {
 
-        System.out.println("Ingrese el id del Huesped");
-        int id = sc.nextInt();
-        sc.nextLine();
-        guest.setId(id);
-        System.out.println("Ingrese el nombre del Huesped");
-        String name = sc.nextLine();
-        guest.setName(name);
-        System.out.println("INgrese el apellido");
-        String lastName = sc.nextLine();
-        guest.setLastName(lastName);
-        System.out.println("ingrese el email");
-        String email = sc.nextLine();
-        guest.setEmail(email);
-        System.out.println("Ingrese el password ");
-        String password = sc.nextLine();
-        guest.setPassword(password);
-        System.out.println("Estado Huesped ");        boolean state = sc.nextBoolean();
-        guest.setState(state);
-        System.out.println("Origen");
-        String origin = sc.nextLine();
-        guest.setOrigin(origin);
-        System.out.println("Tipo de Huesped");
-        String guestType = sc.nextLine();
-        guest.setGuestType(guestType);
+        if (guest.getEmail() == null || !guest.getEmail().contains("@")) {
+            throw new IllegalArgumentException("El formato del email es inválido.");
+        }
 
-        return guest;
+        Optional<Guest> existing = guestRepository.findGuestById(guest.getId());
+        if (existing.isPresent()) {
+            throw new RuntimeException("Ya existe un huésped con el ID: " + guest.getId());
+        }
+
+        return guestRepository.createGuest(guest);
     }
 
     @Override
     public Guest updateGuest(Guest guest) {
+
+        if (guestRepository.findGuestById(guest.getId()).isPresent()) {
+            return guestRepository.updateGuest(guest);
+        }
         return null;
     }
 
     @Override
     public Optional<Guest> getGuestById(int id) {
-        return Optional.empty();
+        return guestRepository.findGuestById(id);
     }
 }

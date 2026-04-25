@@ -13,5 +13,4 @@ public interface BedRoomService {
     List<BedRoom> getAllBedRooms();
     void deleteBedRoomById(int id);
 
-
 }

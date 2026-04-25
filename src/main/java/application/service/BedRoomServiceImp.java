@@ -11,90 +11,63 @@ import java.util.Optional;
 
 public class BedRoomServiceImp implements BedRoomService {
 
-
-
     private final BedRoomRepositoryPort bedRoomRepositoryPort;
     private final BedRoomTypeRepositoryPort bedRoomTypeRepositoryPort;
-
 
     public BedRoomServiceImp(BedRoomRepositoryPort bedRoomRepositoryPort, BedRoomTypeRepositoryPort bedRoomTypeRepositoryPort) {
         this.bedRoomRepositoryPort = bedRoomRepositoryPort;
         this.bedRoomTypeRepositoryPort = bedRoomTypeRepositoryPort;
     }
 
-
     @Override
-    public BedRoom createBedRoom(int roomId,String room,int typeId,double  price,String state) {
-
-        // En este punto resuelvo la agregación como una regla de negocio
-        // He convertido este paso un metodo , para poder reutilizarlo en el update
-        BedRoomType bedRoomType = addBedRoomType(typeId);
-
-        //agregué esta validación para que no permita crear id duplicados
-
-        if (bedRoomRepositoryPort.findBedRoomById(roomId).isPresent()) {
-            throw new IllegalArgumentException("Ya existe una habitación con id: " + roomId);
+    public BedRoom createBedRoom(BedRoom bedRoom) {
+        // 1. Validar duplicados
+        if (bedRoomRepositoryPort.findBedRoomById(bedRoom.getRoomId()).isPresent()) {
+            throw new IllegalArgumentException("La habitación con ID " + bedRoom.getRoomId() + " ya existe.");
         }
 
-        BedRoom bedRoom = new BedRoom(roomId, room, bedRoomType, price, state);
+        // 2. Resolver el tipo de habitación (Regla de negocio)
+        // Obtenemos el ID que el usuario puso en la vista y buscamos el objeto real
+        BedRoomType officialType = findOfficialType(bedRoom.getBedRoomType().getIdType());
+        bedRoom.setBedRoomType(officialType);
 
-        bedRoomRepositoryPort.saveBedRoom(bedRoom);
-
-        return bedRoom;
+        // 3. Guardar
+        return bedRoomRepositoryPort.saveBedRoom(bedRoom);
     }
 
-
-
-
     @Override
-    public BedRoom updateBedRoom(int id,String room,int typeId,double  price,String state) {
+    public BedRoom updateBedRoom(BedRoom bedRoom) {
+        // 1. Verificar existencia
+        if (bedRoomRepositoryPort.findBedRoomById(bedRoom.getRoomId()).isEmpty()) {
+            throw new IllegalArgumentException("No se puede actualizar: la habitación no existe.");
+        }
 
-        // Este bloque de codigo busca la habitación que se debe actualizar:
+        // 2. Resolver el tipo nuevamente por si cambió
+        BedRoomType officialType = findOfficialType(bedRoom.getBedRoomType().getIdType());
+        bedRoom.setBedRoomType(officialType);
 
-        BedRoom bedRoom = bedRoomRepositoryPort.findBedRoomById(id)
-                .orElseThrow(()-> new IllegalArgumentException(
-                "Habitación no encontrada"
-        ));
-
-        BedRoomType bedRoomType = addBedRoomType(typeId);
-
-        bedRoom.setRoom(room);
-        bedRoom.setBedRoomType(bedRoomType);
-        bedRoom.setPrice(price);
-        bedRoom.setState(state);
-
-        bedRoomRepositoryPort.updateBedRoom(bedRoom.getRoomId(),bedRoom);
-        return bedRoom;
+        // 3. Actualizar en persistencia
+        return bedRoomRepositoryPort.updateBedRoom(bedRoom);
     }
 
     @Override
     public Optional<BedRoom> getBedRoomById(int id) {
-        return bedRoomRepositoryPort
-                .findBedRoomById(id);
+        return bedRoomRepositoryPort.findBedRoomById(id);
     }
 
     @Override
     public List<BedRoom> getAllBedRooms() {
-
         return bedRoomRepositoryPort.findAllBedRooms();
     }
 
     @Override
     public void deleteBedRoomById(int id) {
-
         bedRoomRepositoryPort.deleteBedRoomById(id);
-
     }
 
-    // Separé en un metodo la logica que busca el bedRoomType , para poder reutilizarla
-    // en el create y update, asi puedo llamarla en  ambos métodos
-
-    private BedRoomType addBedRoomType(int typeId){
-        BedRoomType bedRoomType =bedRoomTypeRepositoryPort
-                .findBedRoomTypeById(typeId)
-                .orElseThrow(()-> new IllegalArgumentException(
-                        "No existe un tipo de habitación con id " + typeId
-                ));
-        return bedRoomType;
+    // Método privado auxiliar (más descriptivo)
+    private BedRoomType findOfficialType(int typeId) {
+        return bedRoomTypeRepositoryPort.findBedRoomTypeById(typeId)
+                .orElseThrow(() -> new IllegalArgumentException("ID de tipo de habitación no válido: " + typeId));
     }
 }

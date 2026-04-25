@@ -32,16 +32,17 @@ public class BedRoomRepository implements BedRoomRepositoryPort {
     }
 
     @Override
-    public BedRoom updateBedRoom( int id, BedRoom bedRoom) {
+    public BedRoom updateBedRoom(BedRoom bedRoom) {
 
         for(int i = 0; i< bedRooms.size(); i++){
-            if(bedRooms.get(i).getRoomId() == id){
+            if(bedRooms.get(i).getRoomId() == bedRoom.getRoomId()){
                 bedRooms.set(i, bedRoom);
                 return bedRoom;
             }
         }
-        throw new IllegalArgumentException("Habitación con Id " + id + "no encontrada");
+        throw new IllegalArgumentException("Habitación con Id " + bedRoom.getRoomId() + "no encontrada");
     }
+
 
     @Override
     public Optional<BedRoom> findBedRoomById(int id) {

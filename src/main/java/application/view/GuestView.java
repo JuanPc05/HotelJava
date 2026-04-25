@@ -46,6 +46,15 @@ public class GuestView {
         guestAdminService.getGuests().forEach(System.out::println);
     }
 
+    // Dentro de GuestView.java
+
+    public void deleteGuestById(int id) {
+        System.out.println("Solicitando eliminación al módulo administrativo...");
+        // guestAdminService es el que tiene el permiso de borrar
+        guestAdminService.deleteGuest(id);
+        System.out.println("Proceso finalizado.");
+    }
+
     // --- MÉTODOS PRIVADOS (REUTILIZACIÓN) ---
 
     /**

@@ -2,20 +2,12 @@ package application.configuration;
 
 import application.domain.Guest;
 import application.repository.*;
-import application.service.BedRoomServiceImp;
-import application.service.EmployeeServiceImpl;
-import application.service.GuestAdminServiceImpl;
-import application.service.GuestServiceImpl;
-import application.service.outputs.BedRoomService;
-import application.service.outputs.EmployeeService;
-import application.service.outputs.GuestAdminService;
-import application.service.outputs.GuestService;
+import application.service.*;
+import application.service.outputs.*;
 import application.service.ports.*;
-import application.userinterface.MenuApp;
-import application.userinterface.MenuBedRoom;
-import application.userinterface.MenuEmployee;
-import application.userinterface.MenuGuest;
+import application.userinterface.*;
 import application.view.BedRoomView;
+import application.view.BookingView;
 import application.view.EmployeeView;
 import application.view.GuestView;
 
@@ -37,24 +29,28 @@ public class Config {
         EmployeeRepositoryPort empRepo = new EmployeeRepository();
         BedRoomRepositoryPort roomRepo = new BedRoomRepository();
         BedRoomTypeRepositoryPort typeRepo = new BedRoomTypeRepository(); // Si lo tienes
+        BookingRepositoryPort bookingRepo = new BookingRepository();
 
         // 2. Servicios (Core del negocio)
         GuestService guestService = new GuestServiceImpl(guestRepo);
         GuestAdminService guestAdminService = new GuestAdminServiceImpl(guestAdminRepo);
         EmployeeService empService = new EmployeeServiceImpl(empRepo);
         BedRoomService roomService = new BedRoomServiceImp(roomRepo, typeRepo);
+        BookingService bookingService = new BookingServiceImpl(bookingRepo, guestRepo, roomRepo);
 
         // 3. Vistas (Traductores de consola)
         GuestView guestView = new GuestView(guestService, guestAdminService); // Ajustar según tu constructor
         EmployeeView empView = new EmployeeView(empService);
         BedRoomView roomView = new BedRoomView(roomService);
+        BookingView bookingView = new BookingView(bookingService);
 
         // 4. Menús Específicos
         MenuGuest menuGuest = new MenuGuest(guestView);
         MenuEmployee menuEmployee = new MenuEmployee(empView);
         MenuBedRoom menuBedRoom = new MenuBedRoom(roomView);
+        MenuBooking menuBooking = new MenuBooking(bookingView);
 
-        return new MenuApp(menuGuest,menuEmployee,menuBedRoom);
+        return new MenuApp(menuGuest,menuEmployee,menuBedRoom,menuBooking);
     }
 
 

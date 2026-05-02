@@ -1,8 +1,14 @@
 package application.service;
 
+import application.domain.BedRoom;
+import application.domain.Booking;
 import application.domain.Employee;
+import application.domain.Guest;
 import application.service.outputs.EmployeeService;
+import application.service.ports.BedRoomRepositoryPort;
+import application.service.ports.BookingRepositoryPort;
 import application.service.ports.EmployeeRepositoryPort;
+import application.service.ports.GuestRepositoryPort;
 
 import java.util.List;
 import java.util.Optional;
@@ -57,4 +63,5 @@ public class EmployeeServiceImpl implements EmployeeService {
             System.out.println("Aviso: Intento de borrar ID inexistente (" + id + ").");
         }
     }
+
 }

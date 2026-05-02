@@ -33,9 +33,25 @@ public class Guest extends Person {
 
     @Override
     public String toString() {
-        return "Guest{" +
-                "origin='" + origin + '\'' +
-                ", guestType='" + guestType + '\'' +
-                "} " + super.toString();
+        return """
+           -------------------------------
+           FICHA DE HUÉSPED
+           -------------------------------
+           ID      : %d
+           Nombre  : %s %s
+           Email   : %s
+           Origen  : %s
+           Tipo    : %s
+           Estado  : %s
+           -------------------------------
+           """.formatted(
+                getId(),
+                getName(),
+                getLastName(),
+                getEmail(),
+                origin,
+                guestType,
+                (getState() != null && getState()) ? "Activo" : "Inactivo"
+        );
     }
 }

@@ -34,9 +34,13 @@ public class Employee extends Person{
 
     @Override
     public String toString() {
-        return "Employee{" +
-                "position='" + position + '\'' +
-                ", salary=" + salary +
-                '}';
+        return """
+           Employee Info:
+           ----------------------
+           Name: %s %s (ID: %d)
+           Position: %s
+           Salary: %.2f
+           Status: %s
+           """.formatted(getName(), getLastName(), getId(), position, salary, getState() ? "Active" : "Inactive");
     }
 }

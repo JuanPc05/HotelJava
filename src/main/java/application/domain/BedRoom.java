@@ -4,18 +4,12 @@ import java.util.Scanner;
 
 public class BedRoom {
 
-
-    Scanner sc = new Scanner(System.in);
-
-
     private int roomId;
     private String room;
     private BedRoomType bedRoomType;
     private double price;
     private String state;
 
-
-    // Constructors
 
     public BedRoom(){
 
@@ -32,8 +26,6 @@ public class BedRoom {
     public BedRoom(String room) {
         this.room = room;
     }
-
-    // Getter and Setters
 
 
     public int getRoomId() {
@@ -78,7 +70,16 @@ public class BedRoom {
         this.bedRoomType = bedRoomType;
     }
 
-    // Methods
+    @Override
+    public String toString() {
+        // Validamos si bedRoomType es null para evitar errores
+        String nombreTipo = (bedRoomType != null) ? bedRoomType.getType() : "Sin tipo";
+
+        return String.format(
+                "Habitación [ID: %d | Nombre: %s | Tipo: %s | Precio: $%.2f | Estado: %s]",
+                roomId, room, nombreTipo, price, state
+        );
+    }
 
 
 

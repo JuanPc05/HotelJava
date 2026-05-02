@@ -19,8 +19,6 @@ public class BedRoomRepository implements BedRoomRepositoryPort {
                     new BedRoom(1, "201", new BedRoomType(1,"Indivual"),120000, BedRoomState.DISPONIBLE.getDescription()),
                     new BedRoom(2, "202", new BedRoomType(1,"Doble"),180000, BedRoomState.OCUPADA.getDescription() ),
                     new BedRoom(3, "203", new BedRoomType(1,"Suite"),240000, BedRoomState.RESERVADA.getDescription())
-
-
             ));
 
     public BedRoom saveBedRoom(BedRoom bedRoom){

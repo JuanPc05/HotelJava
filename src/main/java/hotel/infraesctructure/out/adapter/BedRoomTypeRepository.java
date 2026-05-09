@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class BedRoomTypeRepository implements BedRoomTypeRepositoryPort {
+public class BedRoomTypeRepository {
 
 
     List<BedRoomType> bedRoomTypes = new ArrayList<>(
@@ -21,12 +21,12 @@ public class BedRoomTypeRepository implements BedRoomTypeRepositoryPort {
             )
     );
 
-    @Override
+
     public BedRoomType saveBedRoomType() {
         return null;
     }
 
-    @Override
+
     public Optional<BedRoomType> findBedRoomTypeById(int id) {
 
         for(BedRoomType bedRoomType : bedRoomTypes){

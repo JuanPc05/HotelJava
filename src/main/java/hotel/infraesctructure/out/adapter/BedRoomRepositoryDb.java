@@ -20,7 +20,8 @@ public class BedRoomRepositoryDb implements BedRoomRepositoryPort {
 
     @Override
     public BedRoom saveBedRoom(BedRoom bedRoom) {
-        return null;
+
+        return bedRoom;
     }
 
     @Override

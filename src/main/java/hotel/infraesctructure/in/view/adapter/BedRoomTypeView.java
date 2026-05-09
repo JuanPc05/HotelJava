@@ -1,31 +1,27 @@
 package hotel.infraesctructure.in.view.adapter;
 
+import hotel.application.BedRoomTypeInputAdapter;
+import hotel.application.inputs.BedRoomTypeUseCase;
 import hotel.domain.BedRoomType;
+import hotel.infraesctructure.util.FormValidationUtil;
 
 import java.util.Scanner;
 
 public class BedRoomTypeView {
 
-    Scanner sc = new Scanner(System.in);
+    private final BedRoomTypeUseCase bedRoomTypeUseCase;
 
-    private final BedRoomType bedRoomType;
-
-    public BedRoomTypeView(BedRoomType bedRoomType){
-        this.bedRoomType = bedRoomType;
+    public BedRoomTypeView(BedRoomTypeUseCase bedRoomTypeUseCase){
+        this.bedRoomTypeUseCase = bedRoomTypeUseCase;
     }
 
     public void createBedRoomTypeView() {
         System.out.println("Creating a new bedroom type...");
-        System.out.println("Ingrese el id del tipo de habitación:");
-        int idType = sc.nextInt();
-        sc.nextLine();
-        bedRoomType.setIdType(idType);
-        System.out.println("Ingrese el nombre del tipo de habitación:");
-        String nameType = sc.nextLine();
-        bedRoomType.setType(nameType);
+        int idType = FormValidationUtil.validateInt("Ingrese el id del tipo de habitación:");
+        String nameType = FormValidationUtil.validateString("Ingrese el nombre del tipo de habitación:");
+
+        bedRoomTypeUseCase.createBedRoomType(idType, nameType);
     }
-
-
 
 
 }

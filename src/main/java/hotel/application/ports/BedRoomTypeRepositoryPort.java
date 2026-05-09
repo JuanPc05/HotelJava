@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface BedRoomTypeRepositoryPort {
 
-    BedRoomType saveBedRoomType();
+    BedRoomType saveBedRoomType(BedRoomType bedRoomType);
     Optional<BedRoomType> findBedRoomTypeById(int id);
 
 }

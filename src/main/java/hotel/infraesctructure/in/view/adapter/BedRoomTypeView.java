@@ -12,6 +12,7 @@ public class BedRoomTypeView {
     private final BedRoomTypeUseCase bedRoomTypeUseCase;
 
     public BedRoomTypeView(BedRoomTypeUseCase bedRoomTypeUseCase){
+
         this.bedRoomTypeUseCase = bedRoomTypeUseCase;
     }
 
@@ -21,6 +22,11 @@ public class BedRoomTypeView {
         String nameType = FormValidationUtil.validateString("Ingrese el nombre del tipo de habitación:");
 
         bedRoomTypeUseCase.createBedRoomType(idType, nameType);
+    }
+
+    public void findAllBedRoomTypes() {
+        System.out.println("Mostrando todos los tipos de habitación...");
+        bedRoomTypeUseCase.findAllBedRoomTypes();
     }
 
 

@@ -36,7 +36,7 @@ public class MenuBedRoom {
                 case 4 -> bedRoomView.getAllBedRooms();
                 case 5 -> bedRoomView.deleteBedRoomById();
                 case 6 -> bedRoomTypeView.createBedRoomTypeView();
-                case 7 -> System.out.println("nada...");
+                case 7 -> bedRoomTypeView.findAllBedRoomTypes();
                 case 8 -> exit = true;
                 default -> System.out.println("Opción no válida.");
             }

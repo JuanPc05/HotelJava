@@ -2,6 +2,7 @@ package hotel.infraesctructure.out.adapter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,12 +39,39 @@ public class BedRoomTypeRepositoryDb implements BedRoomTypeRepositoryPort {
 
     @Override
     public Optional<BedRoomType> findBedRoomTypeById(int id) {
-        List<BedRoomType> bedRoomTypes = new ArrayList<>();
-        String sql = "SELECT * FROM bed_room_type";
-        try(PreparedStatement ps = connection.PrepareStatement(sql)) {
-            ResultSet rs = ps.executeQuery();
+
+        String sql = "SELECT * FROM bed_room_type WHERE id_type = ?";
+        try(PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, id);
+
+            try(ResultSet rs = ps.executeQuery()) {
+                if(rs.next()) {
+                    BedRoomType bedRoomType = (BedRoomType) bedRoomTypeRowMapper.mapRow(rs);
+                    return Optional.of(bedRoomType);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al buscar el tipo de habitación por ID", e);
         }
         return Optional.empty();
+    }
+
+    @Override
+    public List<BedRoomType> findAllBedRoomTypes() {
+        List<BedRoomType> bedRoomTypes = new ArrayList<>();
+
+        String sql = "SELECT * FROM bed_room_type";
+
+        try(PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                BedRoomType bedRoomType = (BedRoomType) bedRoomTypeRowMapper.mapRow(rs);
+                bedRoomTypes.add(bedRoomType);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al obtener la lista de tipos de habitaciones", e);
+        }
+    return bedRoomTypes;
     }
 
     private void setBedRoomTypeParams(PreparedStatement ps, BedRoomType bedRoomType) throws SQLException {

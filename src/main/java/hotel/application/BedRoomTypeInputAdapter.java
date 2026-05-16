@@ -1,7 +1,6 @@
 package hotel.application;
 
 import hotel.application.inputs.BedRoomTypeUseCase;
-import hotel.application.ports.BedRoomRepositoryPort;
 import hotel.application.ports.BedRoomTypeRepositoryPort;
 import hotel.domain.BedRoomType;
 
@@ -27,6 +26,7 @@ public class BedRoomTypeInputAdapter implements BedRoomTypeUseCase {
 
     @Override
     public List<BedRoomType> findAllBedRoomTypes() {
-        return List.of();
+
+        return  bedRoomTypeRepositoryPort.findAllBedRoomTypes();
     }
 }
